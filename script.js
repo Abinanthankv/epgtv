@@ -32,7 +32,7 @@ const myVideo = document.getElementById("myVideo");
 const filterLanguage = document.getElementById("language-filter");
 const filterCategory = document.getElementById("channel-filter");
 const channelInfo=document.getElementById("channel-info")
-
+const channelid=document.getElementById("channel-list");
 const videodata=document.getElementById("video-container");
 const scrollableDiv = document.getElementById("your-scrollable-div");
 const tagid=document.getElementsByClassName("nowplayingtag");
@@ -143,10 +143,31 @@ document.addEventListener('DOMContentLoaded', function() {
   fetch("./channels.json")
   .then((response) => response.json())
   .then((data) => {
-        filtereditemlist(data);
+      //  filtereditemlist(data);
   });
   //load epgdata list
+});  
+function generateEPGList(epgData) {
   
+  //epgList.innerHTML = ''; // Clear previous content
+
+  // Iterate through EPG data items asynchronously using a loop
+  (async () => {
+    for (const item of epgData) {
+      //console.log(item.name);
+      const epgListItem = await getEPGDataById(item.id); // Fetch data for each item
+      
+      //console.log(epgListItem);
+     // epgList.appendChild(epgListItem);
+     /* if (epgListItem) { // Check if data is fetched successfully
+        epgList.appendChild(epgListItem); // Add the generated list item
+      } else {
+        console.error(`Error fetching EPG data for item ID: ${item.id}`);
+      }
+        */
+    }
+  })();
+}
   function filtereditemlist(filteredData) {
     
     channelList.innerHTML = "";
@@ -156,9 +177,10 @@ document.addEventListener('DOMContentLoaded', function() {
      
     });
     //   
+    generateEPGList(filteredData);
     for (const item of filteredData) {
       const listItem = document.createElement("li");
-      listItem.id = "channelID";
+      listItem.id = "channelIDD";
     //  listItem.innerHTML=item.name;
       listItem.insertAdjacentHTML("beforeend", `<img src="${item.logo}">`);
       
@@ -166,15 +188,22 @@ document.addEventListener('DOMContentLoaded', function() {
       nowPlayingSpan.id="nowplaying-span"// Add a class for styling
       nowPlayingSpan.innerText=item.name;
       listItem.appendChild(nowPlayingSpan);
-    //  getEPGDataById(item.id);
+      const ulepg= document.createElement("ul");
+      ulepg.id=item.id;
+      ulepg.classList.add('myClass');
+      listItem.appendChild(ulepg);
+     // getEPGDataById(item.id);
+      
+      //generateEPGList(filteredData);
+      listItem.appendChild(epgList);
       listItem.addEventListener("click", (event) => {
      
         getEPGDataById(item.id);
         const clickedItem = event.target.closest('li');
        
        
-        listItem.appendChild(epgList);
-       videodata.style.display="block"; 
+        //listItem.appendChild(epgList);
+       //videodata.style.display="block"; 
         notifyUserForCorsExtension();
         const channelInfo=document.getElementById("channel-info");
         channelID=item.id;
@@ -210,8 +239,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
       });
-   
+      
       channelList.appendChild(listItem);
+      
      
     //  
     // epgList.appendChild(epglistItem);
@@ -354,7 +384,7 @@ fetch("./channels.json")
     });
   });
 // });
-}); 
+//}); 
 
 
 function updateRemainingTime(channelID){
@@ -570,68 +600,46 @@ function getjioChannelDataById(channelId) {
  
 }
 function getEPGDataById(channelId) {
-  
-  epgList.innerHTML=""
-  var currentPlayingProgram = "";
-  var currentPlayingPrograminfo = ""; // Initialize variable to store current program
-//  var upcomingProgram = "";
-//  var upcomingPrograminfo = "";
-  var programLimit = 1;
-  var tagid=document.getElementById("nowplayingtag");
-  var upcoming=document.getElementById("upcoming");
-  var channelLogo=document.getElementById("channel-logo");
-  var listid=document.getElementById("channelID");
+  const epgul=document.getElementById(channelId);
+  epgList.innerHTML="";
+ // epgul.innerHTML="";
   channelLogo.style.display="block";
-  const currentPlaying = document.getElementById("current-playing");
-  const currentPlayinginfo = document.getElementById("current-playing-info");
- // const upcomingPlaying = document.getElementById("upcoming-playing"); // Add element for upcoming info (optional)
- // const upcomingPlayinginfo = document.getElementById("upcoming-playing-info"); // Add element for upcoming info (optional)
   var currentTime = jioepgtimeformat();
   var epgtime=document.getElementById("epg-time");
-  currentPlaying.innerHTML = "";
-  currentPlayinginfo.innerHTML = "";
-  //upcomingPlaying.innerHTML = ""; // Clear upcoming info if displayed (optional)
-//  upcomingPlayinginfo.innerHTML = ""; // Clear upcoming info if displayed (optional)
-  //currentPlaying.textContent= "Now Playing "
   epgtime.innerHTML="";
- return fetch("./prod1.json")
+ fetch("./prod1.json")
     .then((response) => response.json())
     .then((data) => {
      // console.log(data[channelID])
-      
         var channel = data[channelId];
-       // console.log(channel.title)
-       
-        const startTime = channel.start_time;
-        const stopTime = channel.stop_time;
-        const  title = channel.title;
-        const description = channel.description;
-       const jiochannelId = channel.id;
-       //console.log(currentTime);
+        const previousProgram = channel.reduce((prev, current) => {
+          if (current.stop_time < currentTime && current.stop_time > prev.stop_time) {
+            return current;
+          }
+          return prev;
+        }, channel[0]); // Assuming channel is not empty
+        
+        //console.log(previousProgram.title);
        const currentPrograms = channel.find(item => item.start_time <= currentTime && currentTime < item.stop_time);
        const curr=document.createElement("li");
-     //  curr.class = "epgID";
-       curr.innerHTML="";
+       const prev=document.createElement("li");
        curr.textContent =currentPrograms.title;
+       prev.textContent=previousProgram.title;
+       epgList.appendChild(prev);
        epgList.appendChild(curr);
+       
+       epgul.appendChild(curr);
        const totalWidth = 15000; // In pixels
        const totalDuration = 24 * 60 * 60 * 1000; // Total duration in milliseconds (24 hours)
        const startWidth = calculateItemWidth(currentPrograms.start_time.toString(), currentPrograms.stop_time.toString(), totalWidth, totalDuration);
        const itemWidth = calculateItemWidth(currentTime.toString(), currentPrograms.stop_time.toString(), totalWidth, totalDuration);
-       console.log(itemWidth);
        curr.style.width = itemWidth + 'px';
        //curr.style.padding = startWidth-itemWidth + 'px';
        curr.style.paddingRight = (startWidth-itemWidth) + 'px';
-
-      
        const nowTime = document.createElement("li");
        nowTime.id="livetime";
        const nowtime=convertTimeToHHMM((currentPrograms.start_time).toString());
        nowTime.innerHTML=nowtime;
-    
-       //console.log(nowTime);
-       //epgtime.appendChild(nowTime);
-       //const timeList = generateTimeList(currentPrograms.start_time.toString());
        const timeList = generateTimeList(currentTime.toString());
        timeList.forEach(item=>{
         const timeline=document.createElement("li");
@@ -670,23 +678,18 @@ function getEPGDataById(channelId) {
         // epgtime.appendChild(epgTime);
         
          epgList.appendChild(future);
+         epgul.appendChild(future);
 
         // console.log(epgList);
          //console.log(vdf);
+         
        });
-       
-       
-       
-      //  epglistItem.textContent = currentPlayingProgram;
-       // epgList.appendChild(epglistItem);
-        
-      
      
-    
-    return title;
-      
     });
-
+    
+   // console.log(epgul);
+    //epgList.appendChild(epgList);
+    return epgList;
  
 }
 function updatetime(channelId) {
@@ -799,7 +802,7 @@ function getTimeshiftedCurrentTime(timeShiftSeconds) {
 
 //unwanted codes
 const toggleButton = document.getElementById("toggle-list-size");
-const channelid=document.getElementById("channel-list");
+
 const nowinfo=document.getElementById("nowplaying-span")
 let isListExpanded = true; // Initial state (list starts expanded)
 toggleButton.addEventListener("click", function() {

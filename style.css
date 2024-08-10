@@ -213,6 +213,9 @@ display: flex; /* Make the list a flex container */
 #channelID{
   overflow-x: visible;
 }
+.myClass{
+  display: flex;
+}
 
 #epgID{
   display: flex;
@@ -290,14 +293,14 @@ border-radius: 20px;
   padding: 0;
   margin: 0;
 }
-.epg-listitem {
+.epg-listitem ,.myClass{
   display:flex;
   flex:0 0 1%;
   width: fit-content;
  height: fit-content;
  pointer-events: none;
   list-style: none;
-  margin-left: 195px;
+  margin-left: 185px;
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -311,10 +314,12 @@ border-radius: 20px;
   font-size: 20px ;
   position: sticky;
   display: flex;
- /* top:71.5vh;*/
+  top: 0;
   width: 100%;
-
+  z-index: 10;
 }
+
+
 #epg-list li {
   margin: 10px;
   padding: 10px;

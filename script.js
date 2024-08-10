@@ -283,7 +283,8 @@ fetch("./channels.json")
       // Filter data based on selected group (language) and category
 
       if (selectedGroup === "all" && selectedCategory === "all" ) {
-        filteredData = data;
+        alert("Please select category to continue");
+      //  filteredData = data;
       } else if (selectedGroup === "all" ) {
         filteredData = data.filter(
           (item) => item.category === selectedCategory
@@ -308,7 +309,8 @@ fetch("./channels.json")
       const selectedCategory = filterCategory.value;
       // Filter data based on selected group (language) and category
       if (selectedGroup === "all" && selectedCategory === "all") {
-        filteredData = data;
+        alert("Please select any language to continue");
+       // filteredData = data;
       } else if (selectedGroup === "all") {
         filteredData = data.filter(
           (item) => item.category === selectedCategory  

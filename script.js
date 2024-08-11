@@ -160,12 +160,12 @@ window.addEventListener("scroll", function() {
 if (!document.pictureInPictureElement && !player.paused()) {
   player.requestPictureInPicture();
  }
- if(document.pictureInPictureElement){
-  myVideo.style.display="none";
+ /*if(document.pictureInPictureElement){
+ myVideo.style.display="flex";
  }
  else{
-  myVideo.style.display="block";
- }
+ // myVideo.style.display="block";
+ }*/
 
   } else {
     if (document.pictureInPictureElement && !player.paused()) {

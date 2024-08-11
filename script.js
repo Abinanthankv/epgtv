@@ -10,13 +10,15 @@ var player = videojs("myVideo", {
       forward: 5,
      backward: 10, 
     },
-    
+   //disablePictureInPicture: true,
+  // enableDocumentPictureInPicture: true
    // nativeControlsForTouch:true
   }
 
   // fluid: true,
   // aspectRatio: '9:16'
 });
+//player.controlBar.addChild('PictureInPictureToggle');
 
 player.hlsQualitySelector({
   displayCurrentQuality: true,
@@ -25,7 +27,8 @@ player.hlsQualitySelector({
 
 
 const channelList = document.getElementById("channel-list");
-const epgList = document.getElementById("epg-list");
+//const scrollChannel = document.getElementById("scroll-channel");
+//const epgList = document.getElementById("epg-list");
 const channelName = document.getElementById("channel-name");
 const channelLogo = document.getElementById("channel-logo");
 const myVideo = document.getElementById("myVideo");
@@ -119,6 +122,20 @@ function notifyUserForCorsExtension() {
     //localStorage.setItem('corsExtensionMessageShown', 'true');
   }
 }
+//let isPipActive = false;
+function toggleMiniplayer() {
+ // if (isPipActive) return; 
+// console.log(myVideo);
+//const pipWindow =  documentPictureInPicture.requestWindow();
+//const pipWindow = document.pictureInPictureElement;
+//myVideo.requestPictureInPicture();
+//myVideo.style.display="none";
+//pipWindow.document.body.appendChild(videodata);
+ //videodata.requestPictureInPicture();
+ 
+}
+
+
 window.addEventListener("scroll", function() {
   if (window.scrollY > 82) {  // Hide after 100px scroll
     channelInfo.style.display = "none";
@@ -131,16 +148,33 @@ window.addEventListener("scroll", function() {
     channelInfo.style.display = "flex";
     channelInfo.style.behavior= 'smooth'
   }
-  if (window.scrollY >82) {  // Hide after 100px scroll
+  if (window.scrollY >130 ||window.scrollX>100) {  // Hide after 100px scroll
+  //  toggleMiniplayer();
+ 
+   // myVideo.style.height=20+'vh';
+   // myVideo.style.width=20+'vh';
    
    //epgstyle.style.overflowX="scroll";
-  // epgstyle.style.position= "relative" ;
-  epgstyle.style.top=55+'vh';
+  //epgstyle.style.position= "fixed" ;
+//  epgstyle.style.top=0+'vh';
+if (!document.pictureInPictureElement && !player.paused()) {
+  player.requestPictureInPicture();
+ }
+ if(document.pictureInPictureElement){
+  myVideo.style.display="none";
+ }
+ else{
+  myVideo.style.display="block";
+ }
 
   } else {
+    if (document.pictureInPictureElement && !player.paused()) {
+      player.exitPictureInPicture();
+     }
+   
   //epgstyle.style.overflowX="inherit"
     // epgstyle.style.overflowX="scroll"
-   epgstyle.style.top=82+'vh';
+   //epgstyle.style.top=82+'vh';
   }
 });
 
@@ -192,7 +226,8 @@ function generateEPGList(epgData) {
   function filtereditemlist(filteredData) {
     
     channelList.innerHTML = "";
-    epgList.innerHTML="";
+   // epgList.innerHTML="";
+   // scrollChannel.innerHTML="";
     // to sort channel list alphabetically
     filteredData.sort((a, b) => a.name.localeCompare(b.name)).forEach((item) => {
      
@@ -204,11 +239,14 @@ function generateEPGList(epgData) {
       listItem.id = "channelIDD";
     //  listItem.innerHTML=item.name;
       listItem.insertAdjacentHTML("beforeend", `<img src="${item.logo}">`);
-      
+    //  const scrollchannelid=document.createElement("li");
+     // scrollchannelid.id="scrollchannelID"
+     // scrollchannelid.insertAdjacentHTML("beforeend", `<img src="${item.logo}">`);
       const nowPlayingSpan = document.createElement("span");
       nowPlayingSpan.id="nowplaying-span"// Add a class for styling
       nowPlayingSpan.innerText=item.name;
       listItem.appendChild(nowPlayingSpan);
+      //scrollchannelid.appendChild(nowPlayingSpan);
       const ulepg= document.createElement("ul");
       ulepg.id=item.id;
       listItem.appendChild(ulepg);
@@ -264,6 +302,7 @@ function generateEPGList(epgData) {
       });
       
       channelList.appendChild(listItem);
+    //  scrollChannel.appendChild(scrollchannelid);
       
      
     //  
@@ -627,7 +666,7 @@ function getjioChannelDataById(channelId) {
 }
 function getEPGDataById(channelId) {
  
-  epgList.innerHTML="";
+//  epgList.innerHTML="";
  // epgul.innerHTML="";
   channelLogo.style.display="block";
   var currentTime = jioepgtimeformat();

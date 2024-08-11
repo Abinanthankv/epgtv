@@ -50,13 +50,10 @@ body {
   color: black; /* Text color for list items */
   border-radius: 5px; /* Add rounded corners for a softer look */
   /* Add box shadow for a subtle hover effect */
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+ box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
   transition: all 0.2s ease-in-out; /* Add a smooth hover transition */
 }
-.logo-list img{
-  width: 100px;
-  height: 100px;
-}
+
 
 
 /* Video Player Section */
@@ -154,7 +151,7 @@ body {
 }
 
 #video-details {
- position: sticky; /* Enable sticky positioning */
+ /*position: sticky; /* Enable sticky positioning */
   display: flex;
   top: 0; /* Stick to the top of the viewport */
   width: 100%; /* Maintain full width */
@@ -336,22 +333,59 @@ border-radius: 20px;
   display: none;
   height: 25px;
   font-size: 20px ;
-  position:fixed;
-  /*top: 75vh;*/
+  position:sticky;
+  top: 0;
   width: 100%;
   z-index: 10;
- 
-
 }
-#epginfo-scroll{
+/*#hello{
   overflow-x: scroll;
-}
-
+}*/
+/*#epginfo-scroll{
+  overflow-x:scroll;
+  position:sticky;
+  top:0;
+}*/
 /*#epg-list li {
   margin: 10px;
   padding: 10px;
   
 }*/
+#scroll-channel{
+  position: sticky;
+  z-index: 100;
+  left: 5px;
+  margin: 0;
+  
+}
+.scroll-list li{
+  display: flex;
+  justify-content:start;
+ 
+  align-items: center;
+  width: 220px;
+ /* background-color: #f1f1f1; */
+  /*flex-wrap: wrap;*/
+  text-align: center; /* Center the content of each item */
+  font-family: Arial, sans-serif; /* Set font family */
+   /* Set font size */
+  cursor: pointer; /* Change cursor to pointer on hover */
+  /* Light gray background for list items */
+  color: black; /* Text color for list items */
+  border-radius: 5px; /* Add rounded corners for a softer look */
+  /* Add box shadow for a subtle hover effect */
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease-in-out; /* Add a smooth hover transition */
+
+}
+.logo-list img{
+  width: 100px;
+  height: 100px;
+}
+.scroll-list img{
+  width: 100px;
+  height: 100px;
+}
 #epg-time {
   display: none;
   padding: 0;
@@ -359,7 +393,7 @@ border-radius: 20px;
   font-size: 20px ;
   position: sticky;
   display: flex;
-  top:71.5vh;
+ /* top:71.5vh;*/
   width: 100%;
   padding: 0px;
   z-index: 10;

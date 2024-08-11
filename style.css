@@ -5,6 +5,7 @@ body {
   margin: 0;
   padding: 0;
   font-size: 16px;
+  background-color: seashell;
  
 }
 
@@ -31,9 +32,9 @@ body {
 
 /* Channel List Section */
 
-#channel-list li  {
-  margin: 10px; /* Add space between list items */
-  padding-top: 10px;
+.logo-list  li  {
+ /* margin: 10px; /* Add space between list items */
+ /* padding-top: 10px;*/
  display: flex;
   justify-content:start;
  
@@ -293,40 +294,66 @@ border-radius: 20px;
   padding: 0;
   margin: 0;
 }
-.epg-listitem ,.myClass{
+.myClass{
   display:flex;
-  flex:0 0 1%;
-  width: fit-content;
- height: fit-content;
  pointer-events: none;
   list-style: none;
-  margin-left: 185px;
+ margin-left: 155px;
+ height: 85px;
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
 
 }
-#epg-scroll{
-  display: none;
+.myClass li{
+  /*margin: 10px; /* Add space between list items */
+ /* padding-top: 10px;*/
+ display: flex;
+  justify-content:start;
  
-  height: 25px;
-  font-size: 20px ;
-  position: sticky;
-  display: flex;
-  top: 0;
-  width: 100%;
-  z-index: 10;
+  align-items: center;
+  width: 220px;
+ /* background-color: #f1f1f1; */
+  /*flex-wrap: wrap;*/
+  text-align: center; /* Center the content of each item */
+  font-family: Arial, sans-serif; /* Set font family */
+   /* Set font size */
+  cursor: pointer; /* Change cursor to pointer on hover */
+  /* Light gray background for list items */
+  /* Text color for list items *
+  /* Add box shadow for a subtle hover effect */
+  /*box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease-in-out; /* Add a smooth hover transition */
+  border-radius: 70PX !important;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease-in-out;
+  padding-left: 20px;
+
 }
 
+#epg-scroll{
+  display: none;
+  height: 25px;
+  font-size: 20px ;
+  position:fixed;
+  /*top: 75vh;*/
+  width: 100%;
+  z-index: 10;
+ 
 
-#epg-list li {
+}
+#epginfo-scroll{
+  overflow-x: scroll;
+}
+
+/*#epg-list li {
   margin: 10px;
   padding: 10px;
   
-}
+}*/
 #epg-time {
-  display: flex;
+  display: none;
   padding: 0;
   margin: 0%;
   font-size: 20px ;

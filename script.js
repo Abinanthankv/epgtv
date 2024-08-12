@@ -27,7 +27,7 @@ player.hlsQualitySelector({
 
 
 const channelList = document.getElementById("channel-list");
-//const scrollChannel = document.getElementById("scroll-channel");
+const scrollChannel = document.getElementById("scroll-channel");
 //const epgList = document.getElementById("epg-list");
 const channelName = document.getElementById("channel-name");
 const channelLogo = document.getElementById("channel-logo");
@@ -50,6 +50,7 @@ const scrollfab=document.querySelector('.fab');
 //console.log(minusSpan)
 //minusSpan.style.display="none";
 const epgstyle=document.getElementById("epg-scroll");
+const verticalline=document.getElementById("vertical-line");
 
 //console.log(remainingTimeElement)
 // Initially empty
@@ -160,12 +161,12 @@ window.addEventListener("scroll", function() {
 if (!document.pictureInPictureElement && !player.paused()) {
   player.requestPictureInPicture();
  }
- /*if(document.pictureInPictureElement){
- myVideo.style.display="flex";
+ if(document.pictureInPictureElement){
+ myVideo.style.display="none";
  }
  else{
- // myVideo.style.display="block";
- }*/
+ myVideo.style.display="flex";
+ }
 
   } else {
     if (document.pictureInPictureElement && !player.paused()) {
@@ -211,23 +212,32 @@ function generateEPGList(epgData) {
     for (const item of epgData) {
       //console.log(item.name);
       const epgListItem = await getEPGDataById(item.id); // Fetch data for each item
-      
-      //console.log(epgListItem);
-     // epgList.appendChild(epgListItem);
-     /* if (epgListItem) { // Check if data is fetched successfully
-        epgList.appendChild(epgListItem); // Add the generated list item
+
+     if (epgListItem) { 
+      nowtimewidth()
       } else {
-        console.error(`Error fetching EPG data for item ID: ${item.id}`);
+       // console.error(`Error fetching EPG data for item ID: ${item.id}`);
       }
-        */
+        
     }
   })();
+
+  
+      
+}
+function nowtimewidth(){
+  const id111=jioepgtimeformat()
+  const nowtime=convertTimeToHHMM((id111).toString());
+  const id222 = generateTimeList(id111.toString());
+  const remainingsecs=getRemainingTime(id222[0],nowtime);
+  console.log(remainingsecs);
+  verticalline.style.left=370+remainingsecs*11+'px'
 }
   function filtereditemlist(filteredData) {
     
     channelList.innerHTML = "";
    // epgList.innerHTML="";
-   // scrollChannel.innerHTML="";
+    scrollChannel.innerHTML="";
     // to sort channel list alphabetically
     filteredData.sort((a, b) => a.name.localeCompare(b.name)).forEach((item) => {
      
@@ -238,15 +248,15 @@ function generateEPGList(epgData) {
       const listItem = document.createElement("li");
       listItem.id = "channelIDD";
     //  listItem.innerHTML=item.name;
-      listItem.insertAdjacentHTML("beforeend", `<img src="${item.logo}">`);
-    //  const scrollchannelid=document.createElement("li");
-     // scrollchannelid.id="scrollchannelID"
-     // scrollchannelid.insertAdjacentHTML("beforeend", `<img src="${item.logo}">`);
+    //  listItem.insertAdjacentHTML("beforeend", `<img src="${item.logo}">`);
+      const scrollchannelid=document.createElement("li");
+      scrollchannelid.id="scrollchannelID"
+      scrollchannelid.insertAdjacentHTML("beforeend", `<img src="${item.logo}">`);
       const nowPlayingSpan = document.createElement("span");
       nowPlayingSpan.id="nowplaying-span"// Add a class for styling
       nowPlayingSpan.innerText=item.name;
-      listItem.appendChild(nowPlayingSpan);
-      //scrollchannelid.appendChild(nowPlayingSpan);
+     // listItem.appendChild(nowPlayingSpan);
+      scrollchannelid.appendChild(nowPlayingSpan);
       const ulepg= document.createElement("ul");
       ulepg.id=item.id;
       listItem.appendChild(ulepg);
@@ -256,10 +266,10 @@ function generateEPGList(epgData) {
       
       //generateEPGList(filteredData);
       //listItem.appendChild(epgList);
-      listItem.addEventListener("click", (event) => {
+      scrollchannelid.addEventListener("click", (event) => {
      
       //  getEPGDataById(item.id);
-        const clickedItem = event.target.closest('li');
+        
        
        
         //listItem.appendChild(epgList);
@@ -269,11 +279,12 @@ function generateEPGList(epgData) {
         const channelInfo=document.getElementById("channel-info");
         channelID=item.id;
        channelInfo.style.display="flex";
-        for (const channelItem of channelList.children) {
+        for (const channelItem of scrollChannel.children) {
           channelItem.style.backgroundColor = "";
         }
         // to change css style
-        listItem.style.backgroundColor="lightgreen";
+        scrollchannelid.style.backgroundColor="lightgreen";
+       // listItem.style.backgroundColor="lightgreen";
        // var channelData =  getChannelDataById(item.epgid);
         channelLogo.src=item.logo; 
         var jiochannelData=getjioChannelDataById(item.id);
@@ -302,7 +313,7 @@ function generateEPGList(epgData) {
       });
       
       channelList.appendChild(listItem);
-    //  scrollChannel.appendChild(scrollchannelid);
+     scrollChannel.appendChild(scrollchannelid);
       
      
     //  
@@ -563,11 +574,12 @@ function getRemainingTime(starttime, stoptime) {
   //const remainingMinutes = difference % 60;
   // Format the remaining time as hh:mm string
     // Calculate remaining hours, minutes, and seconds
-    const remainingHours = Math.floor(difference / 3600);
-    const remainingMinutes = Math.floor((difference % 3600) / 60);
-    const remainingSeconds = difference % 60;
+   // const remainingHours = Math.floor(difference / 3600);
+    //const remainingMinutes = Math.floor((difference % 3600) / 60);
+    //const remainingSeconds = difference % 60;
    // return `${String(remainingHours).padStart(2, '0')}:${String(remainingMinutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
-  return `${String(remainingHours).padStart(2, '0')}:${String(remainingMinutes).padStart(2, '0')}`;
+  //return `${String(remainingHours).padStart(2, '0')}:${String(remainingMinutes).padStart(2, '0')}`;
+  return difference;
 }
 function getjioChannelDataById(channelId) {
   var currentPlayingProgram = "";
@@ -672,6 +684,10 @@ function getEPGDataById(channelId) {
   var currentTime = jioepgtimeformat();
   var epgtime=document.getElementById("epg-time");
   epgtime.innerHTML="";
+  
+  const nowtime=convertTimeToHHMM((currentTime).toString());
+  const timeList = generateTimeList(currentTime.toString());
+ // nowtimewidth(nowtime,timeList[0]);
  fetch("./prod2.json")
     .then((response) => response.json())
     .then((data) => {
@@ -710,15 +726,16 @@ function getEPGDataById(channelId) {
         curr.style.marginRight =itemWidth/2+ 'px';
        }
        
+       
         //curr.style.paddingRight = 312 + 'px';
        
        //curr.style.paddingRight = (startWidth-itemWidth) + 'px';
        // curr.style.paddingRight = (itemWidth) + 'px';
        const nowTime = document.createElement("li");
        nowTime.id="livetime";
-       const nowtime=convertTimeToHHMM((currentPrograms.start_time).toString());
-       nowTime.innerHTML=nowtime;
-       const timeList = generateTimeList(currentTime.toString());
+      
+      // nowTime.innerHTML=nowtime;
+       //
        timeList.forEach(item=>{
         const timeline=document.createElement("li");
         timeline.id="timeline";
@@ -726,8 +743,9 @@ function getEPGDataById(channelId) {
        // epgtime.appendChild(nowTime);
         epgtime.appendChild(timeline);
        })
-       const contentWidth = epgtime.scrollWidth;
-       
+      // const contentWidth = epgtime[0].scrollWidth;
+      
+    
     
        const futurePrograms= channel.filter(item => item.start_time > currentTime);
     //   console.log(futurePrograms);
@@ -766,14 +784,20 @@ function getEPGDataById(channelId) {
          //console.log(vdf);
          
        });
+       
      
     });
+    return timeList[0];
+    
+    
+    
     
    // console.log(epgul);
     //epgList.appendChild(epgList);
     //return epgList;
  
 }
+
 function updatetime(channelId) {
  
  // console.log("hi");
@@ -794,7 +818,7 @@ function updatetime(channelId) {
             starttime =convertTimeToHHMM(startTime.toString());
             stoptime =convertTimeToHHMM(stopTime.toString());
             currtime=convertTimeToHHMM(currentTime.toString());
-            rtdtime= getRemainingTime(currtime, stoptime);
+           // rtdtime= getRemainingTime(currtime, stoptime);
            // duration=getRemainingTime(starttime,stoptime);
             remainingTimeElement.textContent=rtdtime;
           }
@@ -934,6 +958,7 @@ epgScroll.addEventListener('mouseup', () => {
 
 function generateTimeList(timestamp) {
   // Convert the timestamp to a Date object
+  
   const startDate = new Date(timestamp.substring(0, 4), timestamp.substring(4, 6) - 1, timestamp.substring(6, 8), timestamp.substring(8, 10), timestamp.substring(10, 12));
 
   // Round down minutes to nearest 30
@@ -954,7 +979,7 @@ function generateTimeList(timestamp) {
   
   timeList.push(formattedTime);
   }
-
+ 
   return timeList;
 }
 function calculateItemWidth(startTime, stopTime, totalWidth, totalDuration) {

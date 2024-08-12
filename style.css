@@ -48,9 +48,9 @@ body {
   cursor: pointer; /* Change cursor to pointer on hover */
   /* Light gray background for list items */
   color: black; /* Text color for list items */
-  border-radius: 5px; /* Add rounded corners for a softer look */
+ /* border-radius: 5px; /* Add rounded corners for a softer look */
   /* Add box shadow for a subtle hover effect */
- box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+ /*box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
   transition: all 0.2s ease-in-out; /* Add a smooth hover transition */
 }
 
@@ -151,14 +151,14 @@ body {
 }
 
 #video-details {
- /*position: sticky; /* Enable sticky positioning */
+ position: relative; /* Enable sticky positioning */
   display: flex;
   top: 0; /* Stick to the top of the viewport */
   width: 100%; /* Maintain full width */
   background-color: #fff; /* Optional background color for visibility */
   padding: 0px; /* Optional padding for aesthetics */
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Optional subtle shadow */
-  z-index: 10; /* Ensure video details stay above other elements */
+  z-index: 100; /* Ensure video details stay above other elements */
 }
 
 #channel-info{
@@ -174,9 +174,11 @@ body {
 }
 
 #toggle{
+  position: relative;
   display: flex;
   justify-content: space-between;
   background-color: #333333;
+  z-index: 100;
   
 
 }
@@ -202,9 +204,9 @@ display: flex; /* Make the list a flex container */
 #channel-list-container{
   
   display: flex;
-  /*overflow-x:scroll;*/
-  position: relative;
- /* position: static*/;
+ /* overflow-x: scroll;
+  position: relative;*/
+  width: 1000%;
  
   
 }
@@ -295,13 +297,23 @@ border-radius: 20px;
   display:flex;
  pointer-events: none;
   list-style: none;
- margin-left: 155px;
+ margin-left: 55px;
  height: 85px;
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
 
+}
+#vertical-line {
+  width: 1px; /* Adjust the width of the line as needed */
+  height: 100%; /* Make the line span the full height of its parent container */
+  background-color: rgb(128, 219, 68); /* Set the color of the line */
+  position: fixed;
+  left: 40px; /* Position the line 40px from the left */
+  z-index: 20;
+  overflow: auto;
+  top: 0;
 }
 .myClass li{
   /*margin: 10px; /* Add space between list items */
@@ -376,7 +388,8 @@ border-radius: 20px;
   /* Add box shadow for a subtle hover effect */
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
   transition: all 0.2s ease-in-out; /* Add a smooth hover transition */
-
+ list-style: none;
+ background-color: antiquewhite;
 }
 .logo-list img{
   width: 100px;

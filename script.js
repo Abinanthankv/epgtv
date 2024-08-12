@@ -28,6 +28,7 @@ player.hlsQualitySelector({
 
 const channelList = document.getElementById("channel-list");
 const scrollChannel = document.getElementById("scroll-channel");
+
 //const epgList = document.getElementById("epg-list");
 const channelName = document.getElementById("channel-name");
 const channelLogo = document.getElementById("channel-logo");
@@ -196,6 +197,7 @@ document.addEventListener('DOMContentLoaded', function() {
  // notifyAndRedirect();
   //console.log("loaded");
   //load channel list
+ // setInterval(nowtimewidth(), 10000);
   fetch("./jio5.json")
   .then((response) => response.json())
   .then((data) => {
@@ -215,6 +217,8 @@ function generateEPGList(epgData) {
 
      if (epgListItem) { 
       nowtimewidth()
+     
+     
       } else {
        // console.error(`Error fetching EPG data for item ID: ${item.id}`);
       }
@@ -231,7 +235,9 @@ function nowtimewidth(){
   const id222 = generateTimeList(id111.toString());
   const remainingsecs=getRemainingTime(id222[0],nowtime);
   console.log(remainingsecs);
-  verticalline.style.left=370+remainingsecs*11+'px'
+  verticalline.style.left=370+remainingsecs*11+'px';
+  return remainingsecs;
+  
 }
   function filtereditemlist(filteredData) {
     
@@ -718,12 +724,17 @@ function getEPGDataById(channelId) {
        const totalDuration = 24 * 60 * 60 * 1000; // Total duration in milliseconds (24 hours)
        const startWidth = calculateItemWidth(currentPrograms.start_time.toString(), currentPrograms.stop_time.toString(), totalWidth, totalDuration);
        const itemWidth = calculateItemWidth(currentTime.toString(), currentPrograms.stop_time.toString(), totalWidth, totalDuration);
+       const twowidth =nowtimewidth();
+      
        if (itemWidth<312){
-        curr.style.width =400+ 'px';
+        curr.style.width =itemWidth+ 'px';
+        curr.style.paddingRight =twowidth*10.4 +'px'
+       // curr.style.width =400+ 'px';
        }
        else{
-        curr.style.width =itemWidth+ 'px';
-        curr.style.marginRight =itemWidth/2+ 'px';
+       curr.style.width =itemWidth+ 'px';
+        curr.style.paddingRight =twowidth*11.4 +'px'
+      //  curr.style.marginRight =(itemWidth)/2+ 'px';
        }
        
        
@@ -736,15 +747,37 @@ function getEPGDataById(channelId) {
       
       // nowTime.innerHTML=nowtime;
        //
-       timeList.forEach(item=>{
+      /* timeList.forEach(item=>{
         const timeline=document.createElement("li");
         timeline.id="timeline";
         timeline.innerHTML=item;
+
        // epgtime.appendChild(nowTime);
         epgtime.appendChild(timeline);
-       })
+       })*/
       // const contentWidth = epgtime[0].scrollWidth;
-      
+      timeList.forEach((item, index) => {
+        const timeline = document.createElement("li");
+        
+        // Assign IDs based on the index
+       /* if (index === 0) {
+            timeline.id = "timeline"; // First item
+        } else if (index === 1) {
+            timeline.id = "two"; // Second item
+            const twowidth =nowtimewidth();
+            
+           timeline.style.width=700-twowidth*11+'px';
+        } else {
+            timeline.id = "timeline"; // Remaining items
+        }*/
+        timeline.id = "timeline";
+        // Set the inner HTML to the item
+        timeline.innerHTML = item;
+        
+        // Append the timeline to epgtime
+        epgtime.appendChild(timeline);
+    });
+    
     
     
        const futurePrograms= channel.filter(item => item.start_time > currentTime);
@@ -768,8 +801,9 @@ function getEPGDataById(channelId) {
          const itemWidth = calculateItemWidth(item.start_time.toString(), item.stop_time.toString(), totalWidth, totalDuration);
          
          //console.log(itemWidth);
+     
       
-          future.style.width =itemWidth+30+ 'px';
+         future.style.width =itemWidth+50+ 'px';
          
          //epgTime.innerHTML=tttime;
          //future.style.width = itemWidth + 'px';

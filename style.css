@@ -240,7 +240,7 @@ display: flex; /* Make the list a flex container */
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
   transition: all 0.2s ease-in-out;
 }
-#epgtime,#livetime,#timeline{
+#epgtime,#livetime,#timeline,#two{
   padding: 5px;
   padding-left: 312.5px;
 
@@ -310,7 +310,7 @@ border-radius: 20px;
   height: 100%; /* Make the line span the full height of its parent container */
   background-color: rgb(128, 219, 68); /* Set the color of the line */
   position: fixed;
-  left: 40px; /* Position the line 40px from the left */
+
   z-index: 20;
   overflow: auto;
   top: 0;
@@ -342,7 +342,7 @@ border-radius: 20px;
 }
 
 #epg-scroll{
-  display: none;
+  display: flex;
   height: 25px;
   font-size: 20px ;
   position:sticky;

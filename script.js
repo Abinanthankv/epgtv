@@ -517,6 +517,11 @@ fetch("./jio5.json")
     //generateEPGList(filteredData);
     
     }*/
+    if (isListExpanded) {
+      toggleButton.textContent = "HIDE EPG";
+    } else {
+      toggleButton.textContent = "SHOW EPG";
+    }
 
       isListExpanded = !isListExpanded; // Toggle state for next click
     });

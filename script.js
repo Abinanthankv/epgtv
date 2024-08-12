@@ -138,15 +138,15 @@ function notifyUserForCorsExtension() {
 window.addEventListener("scroll", function () {
   if (window.scrollY > 120) {
     // Hide after 100px scroll
-   // channelInfo.style.display = "none";
+    channelInfo.style.display = "none";
     scrollfab.style.display = "block";
-    //channelInfo.style.behavior = "smooth";
+    channelInfo.style.behavior = "smooth";
     // epgstyle.style.overflowX="auto"
   } else {
     scrollfab.style.display = "none";
     // epgstyle.style.overflowX="scroll"
-   //channelInfo.style.display = "flex";
-   // channelInfo.style.behavior = "smooth";
+   channelInfo.style.display = "flex";
+    channelInfo.style.behavior = "smooth";
   }
   if (window.scrollY > 450 || window.scrollX > 150) {
    
@@ -156,11 +156,11 @@ window.addEventListener("scroll", function () {
        player.requestPictureInPicture();
       }
     if (document.pictureInPictureElement) {
-      myVideo.style.display = "none";
-      myVideo.style.behavior = "smooth";
+     // myVideo.style.display = "none";
+     // myVideo.style.behavior = "smooth";
     } else {
-     myVideo.style.display = "flex";
-     myVideo.style.behavior = "smooth";
+    // myVideo.style.display = "flex";
+    // myVideo.style.behavior = "smooth";
     }
   } else {
  //  myVideo.style.display = "flex";

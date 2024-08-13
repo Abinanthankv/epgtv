@@ -37,7 +37,7 @@ const filterCategory = document.getElementById("channel-filter");
 const channelInfo = document.getElementById("channel-info");
 const channelid = document.getElementById("channel-list");
 const videodata = document.getElementById("video-container");
-const videodetails=document.getElementById("video-details");
+const videodetails = document.getElementById("video-details");
 const scrollableDiv = document.getElementById("your-scrollable-div");
 const tagid = document.getElementsByClassName("nowplayingtag");
 const HD = document.getElementById("toggle-HD");
@@ -72,7 +72,7 @@ var currentPlayingProgram = "";
 var currentPlayingPrograminfo = "";
 
 let timeoutId = null;
-
+var count=0;
 function detectBrowserAndDeviceType() {
   const userAgent = navigator.userAgent;
   const isMobile =
@@ -138,33 +138,32 @@ function notifyUserForCorsExtension() {
 window.addEventListener("scroll", function () {
   if (window.scrollY > 120) {
     // Hide after 100px scroll
-    channelInfo.style.display = "none";
+  //  channelInfo.style.display = "none";
     scrollfab.style.display = "block";
-    channelInfo.style.behavior = "smooth";
+   // channelInfo.style.behavior = "smooth";
     // epgstyle.style.overflowX="auto"
   } else {
     scrollfab.style.display = "none";
     // epgstyle.style.overflowX="scroll"
-   channelInfo.style.display = "flex";
-    channelInfo.style.behavior = "smooth";
+   // channelInfo.style.display = "flex";
+   // channelInfo.style.behavior = "smooth";
   }
   if (window.scrollY > 450 || window.scrollX > 150) {
-   
-  //  myVideo.style.display = "none";
-  //  myVideo.style.behavior = "smooth";
-      if (!document.pictureInPictureElement && !player.paused()) {
-       player.requestPictureInPicture();
-      }
+    //  myVideo.style.display = "none";
+    //  myVideo.style.behavior = "smooth";
+    if (!document.pictureInPictureElement && !player.paused()) {
+      player.requestPictureInPicture();
+    }
     if (document.pictureInPictureElement) {
-     // myVideo.style.display = "none";
-     // myVideo.style.behavior = "smooth";
+      // myVideo.style.display = "none";
+      // myVideo.style.behavior = "smooth";
     } else {
-    // myVideo.style.display = "flex";
-    // myVideo.style.behavior = "smooth";
+      // myVideo.style.display = "flex";
+      // myVideo.style.behavior = "smooth";
     }
   } else {
- //  myVideo.style.display = "flex";
-  // myVideo.style.behavior = "smooth";
+    //  myVideo.style.display = "flex";
+    // myVideo.style.behavior = "smooth";
     if (document.pictureInPictureElement && !player.paused()) {
       player.exitPictureInPicture();
     }
@@ -199,6 +198,7 @@ document.addEventListener("DOMContentLoaded", function () {
   //console.log("loaded");
   //load channel list
   // setInterval(nowtimewidth(), 10000);
+  
   fetch("./jio5.json")
     .then((response) => response.json())
     .then((data) => {
@@ -213,9 +213,11 @@ function generateEPGList(epgData) {
     for (const item of epgData) {
       //console.log(item.name);
 
-      const epgListItem = await getEPGDataById(item.id); // Fetch data for each item
-
+      //const epgListItem = await getEPGDataById(item.id); // Fetch data for each item
+      const epgListItem = await getEPGDataByApi(item.id);
+     
       if (epgListItem) {
+       
         nowtimewidth();
 
         filterLanguage.disabled = false; // Re-enable filterLanguage
@@ -238,6 +240,7 @@ function nowtimewidth() {
   verticalline.style.left = 370 + remainingsecs * 11 + "px";
   return remainingsecs;
 }
+
 function filtereditemlist(filteredData) {
   channelList.innerHTML = "";
   // epgList.innerHTML="";
@@ -273,11 +276,66 @@ function filtereditemlist(filteredData) {
 
     //generateEPGList(filteredData);
     //listItem.appendChild(epgList);
+    // tagid.style.display = "block";
+    const tagid = document.getElementsByClassName("nowplayingtag");
+    
     scrollchannelid.addEventListener("click", (event) => {
       //  getEPGDataById(item.id);
-
+      
       //listItem.appendChild(epgList);
       //  epgstyle.style.display="flex";
+      //tagid.style.display = "block";
+      const currentPlaying = document.getElementById("current-playing");
+      const currentPlayinginfo = document.getElementById(
+        "current-playing-info"
+      );
+      currentPlaying.innerHTML = "";
+      currentPlayinginfo.innerHTML = "";
+      const apiUrl = `https://jiotvapi.cdn.jio.com/apis/v1.3/getepg/get?offset=0&channel_id=${item.id}&langId=6`; // Replace with your API URL
+      var currentTime = convertTimeToHHMMSS(jioepgtimeformat());
+      var channelLogo = document.getElementById("channel-logo");
+      channelLogo.style.display = "block";
+      channelLogo.src = item.logo;
+      makeApiRequest(apiUrl).then((data) => {
+        if (data) {
+          // console.log(JSON.stringify(data, null, 2));
+          data.epg.forEach((item) => {
+            // console.log(item.srno)
+            //console.log(item.showname)
+            if (item.showtime <= currentTime && currentTime < item.endtime) {
+              // console.log("if")
+              // console.log(item.showname);
+
+              fetch(
+                `https://jiotv.catchup.cdn.jio.com/dare_images/shows/${item.episodeThumbnail}`
+              )
+                .then((response) => {
+                  const imageUrl = response.url; // This is the URL you need
+                  player.poster(imageUrl);
+                  if(imageUrl!="")
+                    {
+                      channelLogo.src=imageUrl
+                    } 
+                   
+                  
+                })
+               
+              // const data=imgurl.response();
+              //channelLogo.insertAdjacentHTML("beforeend", `<img src="${imgurl}">`);
+              //console.log(data)
+             
+              currentPlaying.style.color = "green";
+              currentPlaying.innerHTML = item.showname;
+              currentPlayinginfo.innerHTML = item.description;
+
+              // console.log(item.description);
+            }
+          });
+          //console.log(data.epg[1].showname);
+          // const imgurl= fetch(`https://jiotv.catchup.cdn.jio.com/dare_images/shows/${data.epg[1].episodePoster}`)
+          // console.log(imgurl)
+        }
+      });
       videodata.style.display = "block";
       notifyUserForCorsExtension();
       const channelInfo = document.getElementById("channel-info");
@@ -290,17 +348,22 @@ function filtereditemlist(filteredData) {
       scrollchannelid.style.backgroundColor = "lightgreen";
       // listItem.style.backgroundColor="lightgreen";
       // var channelData =  getChannelDataById(item.epgid);
-      channelLogo.src = item.logo;
-      var jiochannelData = getjioChannelDataById(item.id);
+      // channelLogo.src = item.logo;
+      //var jiochannelData = getjioChannelDataById(item.id);
       //  updatetime(item.id);
       if (item.id != "") {
         player.src({
-          src: `https://blah-engineers-lady-rpg.trycloudflare.com/app/live.php?id=${item.id}&e=.m3u`,
+          src:`https://ref-fragrances-pieces-nd.trycloudflare.com/app/live.php?id=${item.id}&e=.m3u`,
+          // src: `https://blah-engineers-lady-rpg.trycloudflare.com/app/live.php?id=${item.id}&e=.m3u`,
           //type: 'application/x-mpegURL',
           type: "application/vnd.apple.mpegURL",
         });
-        player.load();
-        player.play();
+        player.ready(function() {
+          player.load();
+          player.play();
+        });
+        //  player.load();
+        // player.play();
       } else {
         player.src({
           src: item.url,
@@ -474,18 +537,18 @@ fetch("./jio5.json")
         HD.style.display = "none";
         scrollChannel.classList.remove("channel-toggle");
         scrollChannel.classList.add("scroll-list");
-        scrollChannel.style.position="sticky"
+        scrollChannel.style.position = "sticky";
         verticalline.style.display = "flex";
         //  channelList.classList.add('logo-list');
         epgScroll.style.display = "flex";
-        epgScroll.style.width = 1000 + "%";
+        epgScroll.style.width = 2800 + "%";
         generateEPGList(filteredData);
         epgstyle.style.display = "flex";
-        videodetails.style.position="relative";
+        videodetails.style.position = "relative";
       } else {
         HD.style.display = "block";
-        scrollChannel.style.position="relative"
-        videodetails.style.position="sticky";
+        scrollChannel.style.position = "relative";
+        videodetails.style.position = "sticky";
         filtereditemlist(filteredData);
         verticalline.style.display = "none";
         epgstyle.style.display = "none";
@@ -517,11 +580,11 @@ fetch("./jio5.json")
     //generateEPGList(filteredData);
     
     }*/
-    if (isListExpanded) {
-      toggleButton.textContent = "HIDE EPG";
-    } else {
-      toggleButton.textContent = "SHOW EPG";
-    }
+      if (isListExpanded) {
+        toggleButton.textContent = "HIDE EPG";
+      } else {
+        toggleButton.textContent = "SHOW EPG";
+      }
 
       isListExpanded = !isListExpanded; // Toggle state for next click
     });
@@ -539,9 +602,9 @@ function resetview() {
   scrollChannel.classList.remove("scroll-list");
   epgScroll.style.display = "block";
   epgScroll.style.width = 100 + "%";
-   scrollChannel.style.position="relative";
-   videodetails.style.position="sticky";
-   scrollChannel.style.zIndex=0;
+  scrollChannel.style.position = "relative";
+  videodetails.style.position = "sticky";
+  scrollChannel.style.zIndex = 0;
   // generateEPGList(filteredData);
 }
 
@@ -910,6 +973,86 @@ function getEPGDataById(channelId) {
   //epgList.appendChild(epgList);
   //return epgList;
 }
+function getEPGDataByApi(channelId) {
+  const apiUrl = `https://jiotvapi.cdn.jio.com/apis/v1.3/getepg/get?offset=${count}&channel_id=${channelId}&langId=6`; // Replace with your API URL
+   
+  const epgul = document.getElementById(channelId);
+  var epgtime = document.getElementById("epg-time");
+  epgtime.innerHTML = "";
+  var currentTime = convertTimeToHHMMSS(jioepgtimeformat());
+  const curr = document.createElement("li");
+  curr.id = "timeshift";
+  const tttt=jioepgtimeformat()
+  const timeList = generateTimeList(tttt.toString());
+  timeList.forEach((item, index) => {
+    const timeline = document.createElement("li");
+    timeline.id = "timeline";
+    timeline.innerHTML = item;
+    // Append the timeline to epgtime
+    epgtime.appendChild(timeline);
+  });
+  makeApiRequest(apiUrl).then((data) => {
+    if (data) {
+      // console.log(JSON.stringify(data, null, 2));
+      data.epg.forEach((item) => {
+        // console.log(item.srno)
+        //console.log(item.showname)
+        if (item.showtime <= currentTime && currentTime < item.endtime) {
+             // console.log(item.channel_name);
+               curr.textContent = item.showname;
+  
+               var duration=getRemainingTime(currentTime,item.endtime);
+              
+               if(duration*11.4<342)
+               {
+                curr.style.width = 362 + "px";
+                //curr.style.paddingRight = duration * 10.4 + "px";
+               }
+               else{
+                curr.style.width = duration*11.4 + "px";
+               }
+               //curr.style.width = duration*11.4 + "px";
+               epgul.appendChild(curr);
+              
+        //console.log(item.showname)
+        //  currentPlaying.innerHTML = item.showname;
+         // currentPlayinginfo.innerHTML = item.description;
+
+        }
+       
+        if(item.showtime>currentTime)
+        {
+         console.log("if")
+          const future = document.createElement("li");
+          const epgTime = document.createElement("li");
+          const nowTime = document.createElement("li");
+          epgTime.id = "epgtime";
+          future.id = "timeshift";
+          future.innerHTML = "";
+  
+          future.textContent = item.showname;
+          
+          
+  
+          //console.log(itemWidth);
+  
+          future.style.width =item.duration*11.4 + "px";
+  
+          epgul.appendChild(future);
+  
+          // console.log(epgList);
+          //console.log(vdf);
+        }
+        });
+
+      
+    }
+  });
+  
+  return true;
+  
+  
+}
 
 function updatetime(channelId) {
   // console.log("hi");
@@ -945,10 +1088,21 @@ function convertTimeToHHMM(timeString) {
   const day = timeString.slice(6, 8);
   const hour = timeString.slice(8, 10);
   const minute = timeString.slice(10, 12);
+  //const second = timeString.slice(12, 14);
 
   return `${hour}:${minute}`;
 }
+function convertTimeToHHMMSS(timeString) {
+  // Extract year, month, day, hour, minute from the string
+  const year = timeString.slice(0, 4);
+  const month = timeString.slice(4, 6) - 1; // Months are 0-indexed
+  const day = timeString.slice(6, 8);
+  const hour = timeString.slice(8, 10);
+  const minute = timeString.slice(10, 12);
+  const second = timeString.slice(12, 14);
 
+  return `${hour}:${minute}:${second}`;
+}
 function jioepgtimeformat() {
   var now = new Date();
   var year = now.getFullYear().toString().padStart(4, "0");
@@ -1058,7 +1212,7 @@ function generateTimeList(timestamp) {
   const timeList = [];
 
   // Loop through 48 times (covering 24 hours in 30-minute intervals)
-  for (let i = 0; i < 48; i++) {
+  for (let i = 0; i < 24; i++) {
     // Create a new Date object for each time slot
     const time = new Date(startDate);
     time.setMinutes(time.getMinutes() + i * 30);
@@ -1099,4 +1253,20 @@ function calculateItemWidth(startTime, stopTime, totalWidth, totalDuration) {
   const itemWidth = (totalWidth / totalDuration) * durationMillis;
 
   return itemWidth;
+}
+
+async function makeApiRequest(url) {
+  try {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error(`Network response was not ok: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error making API request:", error);
+    return null;
+  }
 }

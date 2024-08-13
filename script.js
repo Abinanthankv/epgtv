@@ -391,6 +391,19 @@ fetch("./jio5.json")
     const uniqueGroups = [...new Set(data.map((item) => item.language))];
     const uniqueCategories = [...new Set(data.map((item) => item.category))];
     // Populate the filter select element with group (language) and category options
+    const categories = {
+      "Business News": "💼",
+      "Entertainment": "🍿",
+      "Infotainment": "📺",
+      "Kids": "👶",
+      "Lifestyle": "🏠",
+      "Movies": "🎥",
+      "Music": "🎵",
+      "News": "📰",
+      "SONYLIV": "📺",
+      "Shopping": "🛒",
+      "Sports": "⚽"
+    };
     uniqueGroups.sort().forEach((language) => {
       if (language == null || language == "") {
         language = "Others";
@@ -398,18 +411,28 @@ fetch("./jio5.json")
       const option = document.createElement("option");
       option.value = language;
       option.text = language;
+      //option.text = language;
+     
       filterLanguage.appendChild(option);
     });
-
-    uniqueCategories.sort().forEach((category) => {
+    for (const category in categories) {
       const option = document.createElement("option");
-
+      const emoji = categories[category];
       option.value = category;
 
-      option.text = category;
-
+      option.text = `${emoji} ${category}`;
       filterCategory.appendChild(option);
-    });
+    }
+
+   /* uniqueCategories.sort().forEach((category) => {
+      const option = document.createElement("option");
+
+     // option.value = category;
+
+     // option.text = category;
+
+      //filterCategory.appendChild(option);
+    });*/
     filterCategory.parentElement.appendChild(filterLanguage);
 
     filterCategory.addEventListener("change", () => {

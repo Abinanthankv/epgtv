@@ -153,6 +153,7 @@ window.addEventListener("scroll", function () {
     //  myVideo.style.behavior = "smooth";
     if (!document.pictureInPictureElement && !player.paused()) {
       player.requestPictureInPicture();
+      
     }
     if (document.pictureInPictureElement) {
       // myVideo.style.display = "none";
@@ -311,14 +312,23 @@ function filtereditemlist(filteredData) {
               )
                 .then((response) => {
                   const imageUrl = response.url; // This is the URL you need
-                  player.poster(imageUrl);
+                  
                   if(imageUrl!="")
                     {
                       channelLogo.src=imageUrl
                     } 
                    
                   
-                })
+                });
+                fetch(
+                  `https://jiotv.catchup.cdn.jio.com/dare_images/shows/${item.episodePoster}`
+                )
+                  .then((response) => {
+                    const posterUrl = response.url; // This is the URL you need
+                    player.poster(posterUrl);
+                    
+                  });
+              
                
               // const data=imgurl.response();
               //channelLogo.insertAdjacentHTML("beforeend", `<img src="${imgurl}">`);
@@ -414,7 +424,10 @@ fetch("./jio5.json")
       //option.text = language;
      
       filterLanguage.appendChild(option);
+    
+   
     });
+    
     for (const category in categories) {
       const option = document.createElement("option");
       const emoji = categories[category];

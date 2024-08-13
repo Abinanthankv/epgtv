@@ -11,8 +11,8 @@ body {
 
 /* Filter Section */
 #channel-filter {
-  width: 150px;
-  padding: 5px;
+  /*width: 150px;
+  padding: 5px;*/
   margin-bottom: 10px;
   border: 1px solid #ccc;
   border-radius: 3px;
@@ -290,9 +290,9 @@ display: flex; /* Make the list a flex container */
 flex-wrap: wrap; /* Allow items to wrap if overflow */
 list-style: none; /* Remove default list style */
 margin: 0; /* Remove default margin */
-padding: 0;
+padding-left: 0;
 height:50px;
-text-align: center;
+/*text-align: center;*/
 border-style: solid;
 border-radius: 20px;
 }

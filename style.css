@@ -112,7 +112,7 @@ body {
   padding: 0;
   border: none;
   width: 140px;
-  height: 90px;
+  height: 140px;
 
 }
 #nowplaying-info{
@@ -171,7 +171,7 @@ body {
 
 #your-scrollable-div{
   /* Set a height for the element to create scrollable content */
-  height: auto; /* Adjust as needed */
+  height: 130px; /* Adjust as needed */
   overflow-y: auto; /* Enable vertical scrolling */
   padding: 10px;
   background-color: transparent;

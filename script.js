@@ -363,9 +363,7 @@ function filtereditemlist(filteredData) {
       //  updatetime(item.id);
       if (item.id != "") {
         player.src({
-          src:`https://ref-fragrances-pieces-nd.trycloudflare.com/app/live.php?id=${item.id}&e=.m3u`,
-          // src: `https://blah-engineers-lady-rpg.trycloudflare.com/app/live.php?id=${item.id}&e=.m3u`,
-          //type: 'application/x-mpegURL',
+           src: `https://patrol-gray-seal-alloy.trycloudflare.com/app/live.php?id=${item.id}&e=.m3u`,
           type: "application/vnd.apple.mpegURL",
         });
         player.ready(function() {
